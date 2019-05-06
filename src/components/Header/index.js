@@ -13,8 +13,8 @@ class Header extends React.Component{
             timeout: 0
         }
     }
-    componentDidMount(){
-        const url = 'https://api.github.com/search/repositories?q=j'
+    callApi (value){
+        const url = 'https://api.github.com/search/repositories?q=' + value ;
         axios.get(url)
             .then((res) =>{
                 this.setState({
@@ -27,22 +27,18 @@ class Header extends React.Component{
                 })
             });
     }
+    componentDidMount(){
+        this.callApi (this.state.search);
+    }
 
     handleChange(query) {
         var search = query.target.value;
         this.setState({
-            search: search
+            search: query.target.value
         });
         if(this.timeout) clearTimeout(this.timeout);
         this.timeout = setTimeout(()=>{
-            const url = 'https://api.github.com/search/repositories?q=' + search ;
-            axios.get(url)
-                .then((res) =>{
-                    this.setState({
-                        items: res.data.items
-                    });
-                })
-                
+            this.callApi(this.state.search);
         } , 500);
         
     }
